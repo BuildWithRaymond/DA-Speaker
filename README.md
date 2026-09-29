@@ -4,7 +4,7 @@
 
 **Your words, at your pace.**
 
-A dark desktop companion for speaking in Dark Ages local chat.
+Prepare speeches and announcements for Dark Ages, then send them to chat at your own pace.
 
 [![Windows build](https://github.com/BuildWithRaymond/DA-Speaker/actions/workflows/build.yml/badge.svg)](https://github.com/BuildWithRaymond/DA-Speaker/actions/workflows/build.yml)
 [![Latest release](https://img.shields.io/github/v/release/BuildWithRaymond/DA-Speaker?color=d5a746&cacheSeconds=300&v=1)](https://github.com/BuildWithRaymond/DA-Speaker/releases/latest)
