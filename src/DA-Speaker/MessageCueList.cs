@@ -5,7 +5,7 @@ namespace DASpeaker;
 internal sealed class MessageCueList : ListBox
 {
     private int activeStep = -1;
-    private Font numberFont = new("Segoe UI", 9, FontStyle.Bold);
+    private Font numberFont = new("Consolas", 9);
     private Font detailFont = new("Segoe UI", 9);
     private int fontDpi = 96;
     private readonly ToolTip tip = new();
@@ -21,7 +21,7 @@ internal sealed class MessageCueList : ListBox
         BorderStyle = BorderStyle.None;
         BackColor = SpeakerTheme.Preview;
         ForeColor = SpeakerTheme.Ink;
-        Font = new Font("Segoe UI", 11);
+        Font = new Font("Segoe UI", 10.5f);
         DrawMode = DrawMode.OwnerDrawVariable;
         IntegralHeight = false;
         HorizontalScrollbar = false;
@@ -73,8 +73,8 @@ internal sealed class MessageCueList : ListBox
     {
         var step = (QueueStep)Items[index];
         var height = step.IsMessage
-            ? TextRenderer.MeasureText(DisplayText(step.Text!), Font, new Size(TextWidth, int.MaxValue), TextFormatFlags.WordBreak | TextFormatFlags.NoPrefix).Height + U(48)
-            : U(38);
+            ? TextRenderer.MeasureText(DisplayText(step.Text!), Font, new Size(TextWidth, int.MaxValue), TextFormatFlags.WordBreak | TextFormatFlags.NoPrefix).Height + U(42)
+            : U(30);
         // The native owner-drawn list box limits a single item's height to 255 pixels.
         return Math.Min(255, height);
     }
@@ -87,13 +87,13 @@ internal sealed class MessageCueList : ListBox
         {
             numberFont.Dispose();
             detailFont.Dispose();
-            numberFont = new Font("Segoe UI", 9 * DrawingDpi / 96f, FontStyle.Bold);
+            numberFont = new Font("Consolas", 9 * DrawingDpi / 96f);
             detailFont = new Font("Segoe UI", 9 * DrawingDpi / 96f);
             fontDpi = DrawingDpi;
         }
         var active = activeStep == e.Index;
         var selected = (e.State & DrawItemState.Selected) != 0;
-        var background = active ? Color.FromArgb(47, 40, 26) : selected ? Color.FromArgb(35, 35, 40) : BackColor;
+        var background = active ? Color.FromArgb(49, 43, 32) : selected ? Color.FromArgb(37, 37, 36) : BackColor;
         using var brush = new SolidBrush(background);
         e.Graphics.FillRectangle(brush, e.Bounds);
         var x = e.Bounds.Left;
@@ -105,21 +105,26 @@ internal sealed class MessageCueList : ListBox
             var messageNumber = messageNumbers[e.Index];
             using var dot = new SolidBrush(active ? SpeakerTheme.Gold : SpeakerTheme.Surface);
             e.Graphics.FillEllipse(dot, x + U(3), y + U(13), U(24), U(24));
-            TextRenderer.DrawText(e.Graphics, messageNumber.ToString(), numberFont,
+            TextRenderer.DrawText(e.Graphics, messageNumber.ToString("00"), numberFont,
                 new Rectangle(x + U(2), y + U(13), U(26), U(24)), active ? SpeakerTheme.Background : SpeakerTheme.Ink,
                 TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPrefix);
-            var textBounds = new Rectangle(x + U(40), y + U(11), TextWidth, e.Bounds.Height - U(41));
+            var textBounds = new Rectangle(x + U(40), y + U(8), TextWidth, e.Bounds.Height - U(36));
             TextRenderer.DrawText(e.Graphics, DisplayText(step.Text!), Font, textBounds, SpeakerTheme.Ink,
                 TextFormatFlags.WordBreak | TextFormatFlags.NoPrefix);
             TextRenderer.DrawText(e.Graphics, $"{step.Text!.Length} / 59 characters", detailFont,
                 new Rectangle(x + U(40), e.Bounds.Bottom - U(27), TextWidth, U(22)), SpeakerTheme.Muted,
                 TextFormatFlags.NoPrefix);
+            using var meterBase = new SolidBrush(SpeakerTheme.Border);
+            using var meterFill = new SolidBrush(active ? SpeakerTheme.Gold : SpeakerTheme.GoldDim);
+            var meterWidth = U(34);
+            e.Graphics.FillRectangle(meterBase, e.Bounds.Right - meterWidth - U(8), e.Bounds.Bottom - U(15), meterWidth, U(2));
+            e.Graphics.FillRectangle(meterFill, e.Bounds.Right - meterWidth - U(8), e.Bounds.Bottom - U(15), meterWidth * step.Text.Length / 59f, U(2));
         }
         else
         {
             using var dot = new SolidBrush(active ? SpeakerTheme.Gold : SpeakerTheme.Preview);
-            e.Graphics.FillEllipse(dot, x + U(11), y + U(14), U(8), U(8));
-            e.Graphics.DrawEllipse(rail, x + U(11), y + U(14), U(8), U(8));
+            e.Graphics.FillEllipse(dot, x + U(11), y + U(11), U(8), U(8));
+            e.Graphics.DrawEllipse(rail, x + U(11), y + U(11), U(8), U(8));
             TextRenderer.DrawText(e.Graphics, $"{step.DelayMs / 1000.0:0.###} second pause", detailFont,
                 new Rectangle(x + U(40), y, TextWidth, e.Bounds.Height), SpeakerTheme.Muted,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.NoPrefix);

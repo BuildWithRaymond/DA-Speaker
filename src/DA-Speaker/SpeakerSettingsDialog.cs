@@ -30,27 +30,30 @@ internal sealed class SpeakerSettingsDialog : DarkWindow
 
         var root = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 5, Margin = Padding.Empty };
         root.ColumnStyles.Add(new(SizeType.Percent, 100));
-        root.RowStyles.Add(new(SizeType.Absolute, 55));
-        root.RowStyles.Add(new(SizeType.Absolute, 48));
+        root.RowStyles.Add(new(SizeType.Absolute, 70));
+        root.RowStyles.Add(new(SizeType.Absolute, 54));
         root.RowStyles.Add(new(SizeType.Percent, 100));
         root.RowStyles.Add(new(SizeType.Absolute, 36));
         root.RowStyles.Add(new(SizeType.Absolute, 64));
         Content.Controls.Add(root);
-        root.Controls.Add(new Label { Text = "Settings", Font = new Font("Georgia", 20), AutoSize = true, ForeColor = SpeakerTheme.Ink }, 0, 0);
+        var heading = new Panel { Dock = DockStyle.Fill, Margin = Padding.Empty };
+        heading.Controls.Add(new Label { Text = "Make the rhythm your own.", Font = new Font("Segoe UI", 9), AutoSize = true, ForeColor = SpeakerTheme.Muted, Location = new Point(0, 39) });
+        heading.Controls.Add(new Label { Text = "Settings", Font = new Font("Georgia", 24), AutoSize = true, ForeColor = SpeakerTheme.Ink, Location = Point.Empty });
+        root.Controls.Add(heading, 0, 0);
         var nav = new FlowLayoutPanel { Dock = DockStyle.Fill, Margin = Padding.Empty };
         var preferences = SpeakerTheme.Action("Preferences", "preferences", 120);
         var troubleshooting = SpeakerTheme.Action("Troubleshooting", "troubleshooting", 154);
         nav.Controls.AddRange([preferences, troubleshooting]);
         root.Controls.Add(nav, 0, 1);
-        var host = new Panel { Dock = DockStyle.Fill, Margin = Padding.Empty, BackColor = SpeakerTheme.Panel };
+        var host = new SurfacePanel { Dock = DockStyle.Fill, Margin = Padding.Empty, Padding = new Padding(1), BackColor = SpeakerTheme.Panel };
         root.Controls.Add(host, 0, 2);
-        var options = new TableLayoutPanel { Dock = DockStyle.Fill, AutoScroll = true, ColumnCount = 1, Padding = new Padding(20), ForeColor = SpeakerTheme.Ink };
+        var options = new TableLayoutPanel { Dock = DockStyle.Fill, AutoScroll = true, ColumnCount = 1, Padding = new Padding(18), ForeColor = SpeakerTheme.Ink };
         options.ColumnStyles.Add(new(SizeType.Percent, 100));
         keys = new AccentCheckBox { Text = "Control playback from anywhere", Name = "settingsHotkeys", Checked = settings.HotkeysEnabled, AutoSize = true, Margin = new Padding(0, 0, 0, 8), Enabled = !busy };
         options.Controls.Add(keys);
         options.Controls.Add(Caption("F8 Start / Resume    ·    F9 Pause    ·    F10 Stop", 10));
         options.Controls.Add(Caption(busy ? "Finish playback before changing preferences." : "Shortcuts stay off until you enable them.", 18));
-        options.Controls.Add(new Label { Text = "Advanced input timing", Font = new Font("Segoe UI", 10, FontStyle.Bold), AutoSize = true, Margin = new Padding(0, 8, 0, 5) });
+        options.Controls.Add(new Label { Text = "Advanced input timing", Font = new Font("Georgia", 13), AutoSize = true, Margin = new Padding(0, 8, 0, 5) });
         options.Controls.Add(Caption("Adjust only if messages are arriving incorrectly.", 12));
         chat = Timing("settingsChatOpen", chatOpenMs, 10000);
         submit = Timing("settingsSubmit", submitMs, 10000);
@@ -73,9 +76,21 @@ internal sealed class SpeakerSettingsDialog : DarkWindow
         export.Click += (_, _) => saveLog();
         logs.Controls.Add(export, 0, 2);
         host.Controls.Add(logs);
-        preferences.BackColor = SpeakerTheme.Surface; preferences.ForeColor = SpeakerTheme.Gold;
-        preferences.Click += (_, _) => { options.Visible = true; logs.Visible = false; preferences.BackColor = SpeakerTheme.Surface; preferences.ForeColor = SpeakerTheme.Gold; troubleshooting.BackColor = SpeakerTheme.Surface; troubleshooting.ForeColor = SpeakerTheme.Muted; };
-        troubleshooting.Click += (_, _) => { options.Visible = false; logs.Visible = true; logs.BringToFront(); preferences.BackColor = SpeakerTheme.Surface; preferences.ForeColor = SpeakerTheme.Muted; troubleshooting.BackColor = SpeakerTheme.Surface; troubleshooting.ForeColor = SpeakerTheme.Gold; };
+        void SelectPage(bool showPreferences)
+        {
+            options.Visible = showPreferences;
+            logs.Visible = !showPreferences;
+            if (!showPreferences) logs.BringToFront();
+            preferences.ForeColor = showPreferences ? SpeakerTheme.Gold : SpeakerTheme.Muted;
+            troubleshooting.ForeColor = showPreferences ? SpeakerTheme.Muted : SpeakerTheme.Gold;
+            preferences.FlatAppearance.BorderColor = showPreferences ? SpeakerTheme.GoldDim : SpeakerTheme.Border;
+            troubleshooting.FlatAppearance.BorderColor = showPreferences ? SpeakerTheme.Border : SpeakerTheme.GoldDim;
+            preferences.BackColor = showPreferences ? SpeakerTheme.Surface : SpeakerTheme.Background;
+            troubleshooting.BackColor = showPreferences ? SpeakerTheme.Background : SpeakerTheme.Surface;
+        }
+        SelectPage(true);
+        preferences.Click += (_, _) => SelectPage(true);
+        troubleshooting.Click += (_, _) => SelectPage(false);
         var actions = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.RightToLeft, Padding = new Padding(0, 16, 0, 0), Margin = Padding.Empty };
         var apply = SpeakerTheme.Action("Save changes", "applySettings", 135);
         apply.BackColor = SpeakerTheme.Gold;

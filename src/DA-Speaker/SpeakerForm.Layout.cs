@@ -18,14 +18,16 @@ internal sealed partial class SpeakerForm
     private void BuildLayout()
     {
         SuspendLayout();
-        Content.Padding = new Padding(18, 18, 18, 16);
-        var root = new TableLayoutPanel { Dock = DockStyle.Fill, Margin = Padding.Empty, ColumnCount = 1, RowCount = 4 };
+        Content.Padding = new Padding(24, 16, 24, 20);
+        var root = new TableLayoutPanel { Dock = DockStyle.Fill, Margin = Padding.Empty, ColumnCount = 1, RowCount = 5 };
         root.ColumnStyles.Add(new(SizeType.Percent, 100));
-        root.RowStyles.Add(new(SizeType.Absolute, 74));
+        root.RowStyles.Add(new(SizeType.Absolute, 80));
+        root.RowStyles.Add(new(SizeType.Absolute, 64));
         root.RowStyles.Add(new(SizeType.Percent, 100));
-        root.RowStyles.Add(new(SizeType.Absolute, 76));
-        root.RowStyles.Add(new(SizeType.Absolute, 88));
+        root.RowStyles.Add(new(SizeType.Absolute, 72));
+        root.RowStyles.Add(new(SizeType.Absolute, 98));
         Content.Controls.Add(root);
+        root.Controls.Add(new CeremonyHeading(), 0, 0);
 
         settingsButton.Width = 82;
         settingsButton.Height = 32;
@@ -35,35 +37,34 @@ internal sealed partial class SpeakerForm
         settingsButton.FlatAppearance.BorderSize = 0;
         CaptionActions.Controls.Add(settingsButton);
 
-        var target = Grid(3);
+        var target = Grid(4);
+        target.ColumnStyles.Add(new(SizeType.Absolute, 118));
         target.ColumnStyles.Add(new(SizeType.Percent, 100));
         target.ColumnStyles.Add(new(SizeType.Absolute, 94));
         target.ColumnStyles.Add(new(SizeType.Absolute, 112));
-        var picker = new TableLayoutPanel { Dock = DockStyle.Fill, RowCount = 2, ColumnCount = 1, Margin = new Padding(0, 0, 14, 16) };
-        picker.RowStyles.Add(new(SizeType.Absolute, 21));
-        picker.RowStyles.Add(new(SizeType.Percent, 100));
-        picker.ColumnStyles.Add(new(SizeType.Percent, 100));
+        var picker = new SurfacePanel { Dock = DockStyle.Top, Height = 42, Margin = new Padding(0, 0, 12, 0), Padding = new Padding(8, 5, 6, 5), BackColor = SpeakerTheme.Surface };
         var targetCaption = Label("GAME WINDOW", SpeakerTheme.Gold);
         targetCaption.Font = new Font("Segoe UI", 8, FontStyle.Bold);
-        picker.Controls.Add(targetCaption, 0, 0);
+        targetCaption.Margin = new Padding(0, 13, 0, 0);
+        target.Controls.Add(targetCaption, 0, 0);
         clients.Margin = Padding.Empty;
-        clients.Font = new Font("Segoe UI", 11);
+        clients.Font = new Font("Segoe UI", 10);
         clients.AccessibleName = "Game window";
         clients.DrawMode = DrawMode.OwnerDrawFixed;
-        clients.ItemHeight = 28;
+        clients.ItemHeight = 26;
         clients.FlatStyle = FlatStyle.Flat;
         clients.DrawItem += DrawClient;
         clients.SelectedIndexChanged += (_, _) => help.SetToolTip(clients, clients.SelectedItem?.ToString() ?? "Select the game window to receive your messages.");
-        picker.Controls.Add(clients, 0, 1);
-        target.Controls.Add(picker, 0, 0);
+        picker.Controls.Add(clients);
+        target.Controls.Add(picker, 1, 0);
         refresh.Width = 84;
-        refresh.Margin = new Padding(0, 16, 8, 0);
+        refresh.Margin = new Padding(0, 0, 8, 0);
         test.Width = 112;
-        test.Margin = new Padding(0, 16, 0, 0);
-        target.Controls.Add(refresh, 1, 0);
-        target.Controls.Add(test, 2, 0);
+        test.Margin = Padding.Empty;
+        target.Controls.Add(refresh, 2, 0);
+        target.Controls.Add(test, 3, 0);
         help.SetToolTip(test, "Send GLIOCA TEST to the selected game window. Close local chat first.");
-        root.Controls.Add(target, 0, 0);
+        root.Controls.Add(target, 0, 1);
 
         workspace.ColumnStyles.Add(new(SizeType.Percent, 60));
         workspace.ColumnStyles.Add(new(SizeType.Percent, 40));
@@ -90,11 +91,11 @@ internal sealed partial class SpeakerForm
         validation.Cursor = Cursors.Hand;
         validation.AccessibleName = "Script problem";
         workspaceShell.Controls.Add(validation, 0, 2);
-        root.Controls.Add(workspaceShell, 0, 1);
+        root.Controls.Add(workspaceShell, 0, 2);
 
         var script = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 3, Margin = Padding.Empty };
         script.ColumnStyles.Add(new(SizeType.Percent, 100));
-        script.RowStyles.Add(new(SizeType.Absolute, 56));
+        script.RowStyles.Add(new(SizeType.Absolute, 66));
         script.RowStyles.Add(new(SizeType.Percent, 100));
         script.RowStyles.Add(new(SizeType.Absolute, 36));
         scriptPanel.Controls.Add(script);
@@ -102,13 +103,20 @@ internal sealed partial class SpeakerForm
         scriptHeader.ColumnStyles.Add(new(SizeType.Percent, 100));
         scriptHeader.ColumnStyles.Add(new(SizeType.Absolute, 60));
         scriptHeader.ColumnStyles.Add(new(SizeType.Absolute, 60));
-        scriptTitle.Font = new Font("Georgia", 17);
+        scriptTitle.Font = new Font("Georgia", 19);
         scriptTitle.AutoSize = false;
         scriptTitle.AutoEllipsis = true;
-        scriptTitle.Dock = DockStyle.Fill;
+        scriptTitle.Dock = DockStyle.Top;
+        scriptTitle.Height = 32;
         scriptTitle.TextAlign = ContentAlignment.TopLeft;
         scriptTitle.Padding = new Padding(0, 3, 0, 0);
-        scriptHeader.Controls.Add(scriptTitle, 0, 0);
+        var scriptIdentity = new Panel { Dock = DockStyle.Fill, Margin = Padding.Empty };
+        var scriptHint = Label("Compose your address", SpeakerTheme.Muted);
+        scriptHint.Font = new Font("Segoe UI", 8.5f);
+        scriptHint.Dock = DockStyle.Top;
+        scriptIdentity.Controls.Add(scriptHint);
+        scriptIdentity.Controls.Add(scriptTitle);
+        scriptHeader.Controls.Add(scriptIdentity, 0, 0);
         open.Text = "Open";
         save.Text = "Save";
         foreach (var button in new[] { open, save }) { SpeakerTheme.Quiet(button); button.Width = 58; button.Height = 36; button.Margin = Padding.Empty; }
@@ -130,12 +138,12 @@ internal sealed partial class SpeakerForm
 
         var cueLayout = new TableLayoutPanel { Dock = DockStyle.Fill, RowCount = 3, ColumnCount = 1, Margin = Padding.Empty };
         cueLayout.ColumnStyles.Add(new(SizeType.Percent, 100));
-        cueLayout.RowStyles.Add(new(SizeType.Absolute, 30));
-        cueLayout.RowStyles.Add(new(SizeType.Absolute, 28));
+        cueLayout.RowStyles.Add(new(SizeType.Absolute, 32));
+        cueLayout.RowStyles.Add(new(SizeType.Absolute, 34));
         cueLayout.RowStyles.Add(new(SizeType.Percent, 100));
         cuePanel.Controls.Add(cueLayout);
         var cueTitle = Label("Message preview", SpeakerTheme.Ink);
-        cueTitle.Font = new Font("Georgia", 13, FontStyle.Bold);
+        cueTitle.Font = new Font("Georgia", 16);
         cueLayout.Controls.Add(cueTitle, 0, 0);
         counts.ForeColor = SpeakerTheme.Muted;
         counts.Font = new Font("Segoe UI", 9);
@@ -158,7 +166,7 @@ internal sealed partial class SpeakerForm
         };
 
         var pace = Grid(3);
-        pace.Padding = new Padding(0, 17, 0, 8);
+        pace.Padding = new Padding(2, 14, 0, 12);
         pace.ColumnStyles.Add(new(SizeType.Absolute, 64));
         pace.ColumnStyles.Add(new(SizeType.Percent, 50));
         pace.ColumnStyles.Add(new(SizeType.Percent, 50));
@@ -170,19 +178,19 @@ internal sealed partial class SpeakerForm
         pace.Controls.Add(PaceField("Between messages", lineDelay), 1, 0);
         pace.Controls.Add(PaceField("Between paragraphs", paragraphDelay), 2, 0);
         help.SetToolTip(paragraphDelay, "Blank lines use this pause instead of the between-message pause.");
-        root.Controls.Add(pace, 0, 2);
+        root.Controls.Add(pace, 0, 3);
 
-        var playback = new Panel { Dock = DockStyle.Fill, Margin = Padding.Empty };
+        var playback = new SurfacePanel { Dock = DockStyle.Fill, Margin = Padding.Empty, BackColor = SpeakerTheme.Panel, Padding = new Padding(18, 8, 18, 10) };
         var footer = Grid(2);
-        footer.Padding = new Padding(0, 8, 0, 12);
+        footer.Padding = new Padding(0, 8, 0, 8);
         footer.ColumnStyles.Add(new(SizeType.Percent, 100));
-        footer.ColumnStyles.Add(new(SizeType.Absolute, 306));
+        footer.ColumnStyles.Add(new(SizeType.Absolute, 340));
         var text = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 3, Margin = new Padding(0, 0, 12, 0) };
         text.RowStyles.Add(new(SizeType.Percent, 40));
         text.RowStyles.Add(new(SizeType.Percent, 35));
         text.RowStyles.Add(new(SizeType.Percent, 25));
         text.ColumnStyles.Add(new(SizeType.Percent, 100));
-        status.Font = new Font("Segoe UI", 11, FontStyle.Bold);
+        status.Font = new Font("Segoe UI", 10.5f, FontStyle.Bold);
         status.ForeColor = Ink;
         status.Name = "playbackStatus";
         status.AutoSize = false;
@@ -199,9 +207,9 @@ internal sealed partial class SpeakerForm
         text.Controls.Add(hotkeyStatus, 0, 2);
         footer.Controls.Add(text, 0, 0);
         var actions = new FlowLayoutPanel { Dock = DockStyle.Fill, Margin = Padding.Empty, Padding = new Padding(0, 10, 0, 0), WrapContents = false };
-        start.Width = 144;
-        pause.Width = 76;
-        stop.Width = 70;
+        start.Width = 160;
+        pause.Width = 86;
+        stop.Width = 78;
         start.Height = pause.Height = stop.Height = 46;
         start.Font = new Font("Segoe UI", 10, FontStyle.Bold);
         stop.Margin = Padding.Empty;
@@ -209,7 +217,7 @@ internal sealed partial class SpeakerForm
         footer.Controls.Add(actions, 1, 0);
         playback.Controls.Add(footer);
         playback.Controls.Add(track);
-        root.Controls.Add(playback, 0, 3);
+        root.Controls.Add(playback, 0, 4);
 
         scriptButton.Click += (_, _) => ShowWorkspace(false);
         SizeChanged += (_, _) => UpdateWorkspaceLayout();
@@ -258,7 +266,7 @@ internal sealed partial class SpeakerForm
     private void UpdateWorkspaceLayout()
     {
         if (compactTabs is null) return;
-        clients.ItemHeight = 28 * DeviceDpi / 96;
+        clients.ItemHeight = 26 * DeviceDpi / 96;
         compact = ClientSize.Width < 940 * DeviceDpi / 96f;
         workspace.SuspendLayout();
         workspaceShell.SuspendLayout();
@@ -287,7 +295,7 @@ internal sealed partial class SpeakerForm
 
     private void DrawClient(object? sender, DrawItemEventArgs e)
     {
-        using var brush = new SolidBrush((e.State & DrawItemState.Selected) != 0 ? SpeakerTheme.Surface : Background);
+        using var brush = new SolidBrush(SpeakerTheme.Surface);
         e.Graphics.FillRectangle(brush, e.Bounds);
         var value = "Select a Dark Ages window";
         if (e.Index >= 0 && clients.Items[e.Index] is ClientTarget target)

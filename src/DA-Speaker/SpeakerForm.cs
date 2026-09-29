@@ -14,7 +14,7 @@ internal sealed partial class SpeakerForm : DarkWindow
     private readonly Func<IReadOnlyList<ClientTarget>> discoverClients;
     private readonly ScriptRunner runner;
     private readonly GlobalHotkeys hotkeys = new(new WindowsHotkeyApi());
-    private readonly ComboBox clients = new() { Name = "clients", DropDownStyle = ComboBoxStyle.DropDownList, Dock = DockStyle.Fill, BackColor = Surface, ForeColor = Ink, DropDownWidth = 740 };
+    private readonly ComboBox clients = new SpeakerComboBox() { Name = "clients", DropDownStyle = ComboBoxStyle.DropDownList, Dock = DockStyle.Fill, BackColor = Surface, ForeColor = Ink, DropDownWidth = 740 };
     private readonly Button refresh = Button("Refresh", "refreshClients", 95);
     private readonly Button open = Button("Open script", "openScript", 110);
     private readonly Button save = Button("Save script", "saveScript", 110);

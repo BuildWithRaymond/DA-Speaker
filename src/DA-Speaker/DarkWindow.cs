@@ -15,13 +15,13 @@ internal class DarkWindow : Form
         BackColor = SpeakerTheme.Background;
         Padding = new Padding(1);
         DoubleBuffered = true;
-        var caption = new TableLayoutPanel { Dock = DockStyle.Top, Height = 42, ColumnCount = 3, RowCount = 1, BackColor = SpeakerTheme.Background, Padding = new Padding(12, 0, 0, 1), Margin = Padding.Empty };
-        caption.ColumnStyles.Add(new(SizeType.Absolute, 32));
+        var caption = new TableLayoutPanel { Dock = DockStyle.Top, Height = 48, ColumnCount = 3, RowCount = 1, BackColor = SpeakerTheme.Background, Padding = new Padding(22, 0, 0, 1), Margin = Padding.Empty };
+        caption.ColumnStyles.Add(new(SizeType.Absolute, 40));
         caption.ColumnStyles.Add(new(SizeType.Percent, 100));
         caption.ColumnStyles.Add(new(SizeType.AutoSize));
         caption.RowStyles.Add(new(SizeType.Percent, 100));
-        var mark = new SpeechMark { Width = 26, Height = 26, Anchor = AnchorStyles.Left, Margin = Padding.Empty };
-        var title = new Label { Text = Text, AutoSize = false, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Font = new Font("Georgia", 12, FontStyle.Bold), ForeColor = SpeakerTheme.Ink, Margin = Padding.Empty };
+        var mark = new SpeechMark { Width = 30, Height = 30, Anchor = AnchorStyles.Left, Margin = Padding.Empty };
+        var title = new Label { Text = Text, AutoSize = false, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, Font = new Font("Segoe UI", 10, FontStyle.Bold), ForeColor = SpeakerTheme.Ink, Margin = Padding.Empty };
         TextChanged += (_, _) => title.Text = Text;
         caption.Controls.Add(mark, 0, 0);
         caption.Controls.Add(title, 1, 0);
@@ -60,7 +60,7 @@ internal class DarkWindow : Form
     private static Button CaptionButton(string text, string name, string accessibleName)
     {
         var button = SpeakerTheme.Action(text, name, 42);
-        button.Height = 40;
+        button.Height = 46;
         button.Font = new Font("Segoe UI", 12);
         button.BackColor = SpeakerTheme.Background;
         button.ForeColor = SpeakerTheme.Muted;

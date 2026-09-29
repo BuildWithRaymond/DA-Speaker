@@ -224,6 +224,9 @@ public sealed class SpeakerFormTests
             AssertVisibleWithin(form, Get<Button>(form, "startScript"));
             AssertVisibleWithin(form, Get<Button>(form, "stopScript"));
             AssertVisibleWithin(form, Get<RichTextBox>(form, "scriptEditor"));
+            var wrap = Get<CheckBox>(form, "autoWrap");
+            Assert.True(wrap.Width >= TextRenderer.MeasureText(wrap.Text, wrap.Font).Width + 20 * dpi / 96,
+                "The wrap label must fit beside its custom checkbox at the current DPI.");
             Capture(form, $"dark-dpi-{dpi}");
         }
         finally { System.Runtime.InteropServices.Marshal.FreeHGlobal(memory); }
