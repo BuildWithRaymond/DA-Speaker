@@ -14,9 +14,9 @@ A dark desktop companion for speaking in Dark Ages local chat.
 
 </div>
 
-![DA Speaker's ceremonial dark-and-gold interface: engraved accents, script editor, message timeline, and playback controls](docs/images/showcase.png)
+![DA Speaker's ceremonial dark-and-gold interface: engraved accents, script editor, message timeline, and playback controls](docs/images/ceremonial-showcase.png)
 
-[View full-size workspace screenshot](docs/images/screenshots/main.png)
+[View full-size workspace screenshot](docs/images/screenshots/ceremonial-main.png)
 
 ## A little room for your words
 
@@ -31,9 +31,9 @@ sequence, and lets you decide when to speak, pause, or start again.
 - **Keep your place.** Your draft and preferences are remembered between sessions.
 - **Keep it compact.** Smaller windows switch between Script and Preview; advanced options live in Settings.
 
-![DA Speaker's redesigned compact preview and Settings, with matching gold controls and refined typography](docs/images/controls.png)
+![DA Speaker's redesigned compact preview and Settings, with matching gold controls and refined typography](docs/images/ceremonial-controls.png)
 
-Full-size screenshots: [Compact preview](docs/images/screenshots/compact.png) · [Settings](docs/images/screenshots/settings.png)
+Full-size screenshots: [Compact preview](docs/images/screenshots/ceremonial-compact.png) · [Settings](docs/images/screenshots/ceremonial-settings.png)
 
 ## Quick start
 

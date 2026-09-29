@@ -29,7 +29,7 @@ Date: 2026-09-28.
 
 - Executable: `artifacts/premium/DA-Speaker.exe`.
 - Before: `artifacts/design/before-main.png`.
-- After: `docs/images/screenshots/main.png`.
+- After: `docs/images/screenshots/ceremonial-main.png`.
 - State captures: `artifacts/design/`.
 
 The executable is a Windows x64, framework-dependent single-file build and

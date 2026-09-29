@@ -48,10 +48,10 @@ function New-Canvas([int]$width, [int]$height) {
 $hero = New-Canvas 1600 1400
 Paint-Text $hero.Canvas 'Your words. Your pace.' 76 119 80 '#EFEADF' 'Georgia'
 Paint-Text $hero.Canvas 'Prepare your script. Preview every message. Speak when you are ready.' 81 223 26 '#A6A5A0'
-Paint-Screen $hero.Canvas 'main.png' 160 326 1280
+Paint-Screen $hero.Canvas 'ceremonial-main.png' 160 326 1280
 Paint-Text $hero.Canvas 'SCRIPT EDITOR  /  EXACT PREVIEW  /  PACED PLAYBACK' 160 1328 17 '#D8B878'
 Paint-Text $hero.Canvas 'Open source. Made for your desktop.' 1130 1328 17 '#A6A5A0'
-$hero.Bitmap.Save((Join-Path $imageRoot 'showcase.png'), [System.Drawing.Imaging.ImageFormat]::Png)
+$hero.Bitmap.Save((Join-Path $imageRoot 'ceremonial-showcase.png'), [System.Drawing.Imaging.ImageFormat]::Png)
 $hero.Canvas.Dispose()
 $hero.Bitmap.Dispose()
 
@@ -62,11 +62,11 @@ Paint-Text $detail.Canvas 'ROOM FOR YOUR GAME' 82 302 17 '#D8B878'
 Paint-Text $detail.Canvas 'Compact preview, with playback always in reach.' 82 336 21 '#A6A5A0'
 Paint-Text $detail.Canvas 'SETTINGS, WHEN YOU NEED THEM' 920 302 17 '#D8B878'
 Paint-Text $detail.Canvas 'Shortcuts, timing, and a little fine-tuning.' 920 336 21 '#A6A5A0'
-Paint-Screen $detail.Canvas 'compact.png' 86 406 710
-Paint-Screen $detail.Canvas 'settings.png' 920 406 580
+Paint-Screen $detail.Canvas 'ceremonial-compact.png' 86 406 710
+Paint-Screen $detail.Canvas 'ceremonial-settings.png' 920 406 580
 Paint-Text $detail.Canvas 'Actual application screens with a sample script.' 82 1134 18 '#8F939D'
 Paint-Text $detail.Canvas 'DA Speaker 1.1.0' 1350 1134 18 '#D8B878'
-$detail.Bitmap.Save((Join-Path $imageRoot 'controls.png'), [System.Drawing.Imaging.ImageFormat]::Png)
+$detail.Bitmap.Save((Join-Path $imageRoot 'ceremonial-controls.png'), [System.Drawing.Imaging.ImageFormat]::Png)
 $detail.Canvas.Dispose()
 $detail.Bitmap.Dispose()
-Write-Output 'Created docs/images/showcase.png and docs/images/controls.png'
+Write-Output 'Created docs/images/ceremonial-showcase.png and docs/images/ceremonial-controls.png'
