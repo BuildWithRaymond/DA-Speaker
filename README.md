@@ -7,7 +7,7 @@
 A dark desktop companion for speaking in Dark Ages local chat.
 
 [![Windows build](https://github.com/BuildWithRaymond/DA-Speaker/actions/workflows/build.yml/badge.svg)](https://github.com/BuildWithRaymond/DA-Speaker/actions/workflows/build.yml)
-[![Latest release](https://img.shields.io/github/v/release/BuildWithRaymond/DA-Speaker?color=d5a746)](https://github.com/BuildWithRaymond/DA-Speaker/releases/latest)
+[![Latest release](https://img.shields.io/github/v/release/BuildWithRaymond/DA-Speaker?color=d5a746&cacheSeconds=300&v=1)](https://github.com/BuildWithRaymond/DA-Speaker/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-d5a746)](LICENSE)
 
 [**Download for Windows**](https://github.com/BuildWithRaymond/DA-Speaker/releases/latest) · [Quick start](#quick-start) · [User guide](docs/usage.md) · [Contributing](CONTRIBUTING.md)
