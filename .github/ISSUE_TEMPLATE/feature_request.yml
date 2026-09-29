@@ -1,0 +1,16 @@
+name: Feature request
+description: Suggest an improvement to DA Speaker.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would this help you do?
+      description: Describe the user problem or task.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Suggested behavior
+      description: Describe your idea and any alternatives you have considered.

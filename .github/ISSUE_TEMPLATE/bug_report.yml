@@ -1,0 +1,36 @@
+name: Bug report
+description: Something is not working as expected.
+title: "[Bug]: "
+body:
+  - type: input
+    id: version
+    attributes:
+      label: DA Speaker version
+      placeholder: "1.1.0"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Windows and game client
+      description: Include your Windows version, display scaling if relevant, and Dark Ages client version.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: A short sample script is helpful when the issue involves parsing or timing.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots or log excerpts
+      description: Review logs before posting. Remove private script text and account details.

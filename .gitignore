@@ -1,0 +1,25 @@
+**/bin/
+**/obj/
+artifacts/
+.vs/
+TestResults/
+.idea/
+*.user
+*.suo
+*.log
+.env
+.env.*
+!.env.example
+.codex/
+.agents/
+__pycache__/
+
+# Local design notes and investigation transcripts.
+docs/superpowers/
+docs/implementation-plan.md
+docs/missed-message-investigation.md
+docs/redesign-validation.md
+docs/input-research.md
+docs/repro-ending.txt
+docs/USAGE.txt
+docs/sample.txt
