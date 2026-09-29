@@ -12,7 +12,6 @@ internal static class SpeakerTheme
     public static readonly Color Muted = Color.FromArgb(153, 162, 177);
     public static readonly Color Gold = Color.FromArgb(213, 167, 70);
     public static readonly Color Border = Color.FromArgb(43, 44, 49);
-    public static readonly Color Green = Color.FromArgb(104, 199, 143);
 
     public static Icon LoadIcon()
     {

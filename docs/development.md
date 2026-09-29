@@ -32,9 +32,9 @@ dotnet run --project src/DA-Speaker -c Release
 The application requests administrator rights when launched. For an actual game
 check, start the compiled executable and accept the Windows elevation prompt.
 
-The optional `--diagnostic` mode exposes the original transport diagnostic tool.
-Normal use should go through the main interface. Production uses the verified
-direct Ctrl+V path; experimental modes do not activate automatically.
+Use **Send test** in the main window to check input, and **Settings →
+Troubleshooting** to view or save the activity log. All input uses the verified
+direct Ctrl+V path.
 
 ## Publish
 

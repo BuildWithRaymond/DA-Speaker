@@ -34,13 +34,6 @@ internal sealed class WindowsWindowApi : IWindowApi
         return pid;
     }
     public uint MapScanCode(uint key) => Native.MapVirtualKey(key, 0);
-    public short MapCharacter(nint handle, char character)
-    {
-        var thread = Native.GetWindowThreadProcessId(handle, out _);
-        if (thread == 0) return -1;
-        var layout = Native.GetKeyboardLayout(thread);
-        return layout == 0 ? (short)-1 : Native.VkKeyScanEx(character, layout);
-    }
     public bool Post(nint handle, KeyMessage message, out int error)
     {
         var result = Native.PostMessage(handle, message.Message, message.WParam, message.LParam);
@@ -169,10 +162,6 @@ internal static class Native
     internal static extern uint GetWindowThreadProcessId(nint handle, out uint processId);
     [DllImport("user32.dll", EntryPoint = "MapVirtualKeyW")]
     internal static extern uint MapVirtualKey(uint code, uint mapType);
-    [DllImport("user32.dll")]
-    internal static extern nint GetKeyboardLayout(uint threadId);
-    [DllImport("user32.dll", EntryPoint = "VkKeyScanExW", CharSet = CharSet.Unicode)]
-    internal static extern short VkKeyScanEx(char character, nint keyboardLayout);
     [DllImport("user32.dll", EntryPoint = "PostMessageW", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool PostMessage(nint handle, uint message, nuint wParam, nint lParam);

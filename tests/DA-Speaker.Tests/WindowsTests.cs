@@ -75,7 +75,6 @@ public sealed class WindowsTests
         Assert.Equal((uint)System.Environment.ProcessId, api.GetProcessId(form.Handle));
         Assert.NotEqual("Darkages", api.GetClassName(form.Handle));
         Assert.Equal(0x1Cu, api.MapScanCode(0x0D));
-        Assert.NotEqual((short)-1, api.MapCharacter(form.Handle, 'a'));
         Assert.All(api.FindClients(), c =>
         {
             Assert.Equal("Darkages", api.GetClassName(c.Handle));
@@ -99,38 +98,6 @@ public sealed class WindowsTests
         Assert.Equal("<b>Original text</b>", html);
         Assert.True(snapshot.TryGetData<MemoryStream>("DA Speaker test bytes", false, out var copied));
         Assert.Equal(new byte[] { 1, 2, 3 }, copied.ToArray());
-    });
-
-    [Fact]
-    public void DiagnosticHasOnlyTestActionAndExpectedTimingDefaults() => Sta(() =>
-    {
-        using var form = new DiagnosticForm();
-        Assert.Equal("DA Speaker — Input diagnostic", form.Text);
-        var test = Assert.IsType<Button>(Assert.Single(form.Controls.Find("testChat", true)));
-        Assert.False(test.Enabled);
-        Assert.Equal(250, Assert.IsType<NumericUpDown>(Assert.Single(form.Controls.Find("chatOpenDelay", true))).Value);
-        Assert.Equal(150, Assert.IsType<NumericUpDown>(Assert.Single(form.Controls.Find("pasteDelay", true))).Value);
-        Assert.Equal(10, Assert.IsType<NumericUpDown>(Assert.Single(form.Controls.Find("keyGap", true))).Value);
-        Assert.Empty(form.Controls.Find("startScript", true));
-        var method = Assert.IsType<ComboBox>(Assert.Single(form.Controls.Find("inputMethod", true)));
-        Assert.StartsWith("Ctrl+V direct", method.SelectedItem?.ToString());
-        var sample = Assert.IsType<ComboBox>(Assert.Single(form.Controls.Find("testSample", true)));
-        Assert.Equal("GLIOCA TEST", sample.SelectedItem);
-        Assert.Contains("Aa Zz 09 !?:\"'.,-", sample.Items.Cast<string>());
-        // Show off-screen so WinForms creates child handles and performs real layout.
-        form.ShowInTaskbar = false;
-        form.StartPosition = FormStartPosition.Manual;
-        form.Location = new Point(-20000, -20000);
-        form.Show();
-        Application.DoEvents();
-        using var bitmap = new Bitmap(form.Width, form.Height);
-        form.DrawToBitmap(bitmap, new Rectangle(Point.Empty, form.Size));
-        var root = new DirectoryInfo(AppContext.BaseDirectory);
-        while (root is not null && !File.Exists(Path.Combine(root.FullName, "DA-Speaker.slnx"))) root = root.Parent;
-        Assert.NotNull(root);
-        var artifacts = Path.Combine(root.FullName, "artifacts");
-        Directory.CreateDirectory(artifacts);
-        bitmap.Save(Path.Combine(artifacts, "diagnostic-preview.png"));
     });
 
     private static void Sta(Action action)

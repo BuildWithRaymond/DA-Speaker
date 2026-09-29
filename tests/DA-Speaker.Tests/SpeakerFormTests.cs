@@ -6,7 +6,7 @@ namespace DASpeaker.Tests;
 public sealed class SpeakerFormTests
 {
     [Fact]
-    public void PlaybackButtonsPauseResumeAndUseConfirmedTransport() => RunSta(() =>
+    public void PlaybackButtonsPauseResumeAndUseSavedTimings() => RunSta(() =>
     {
         var input = new ControlledInput();
         using var form = CreatePlaybackForm(input);
@@ -26,7 +26,7 @@ public sealed class SpeakerFormTests
         Assert.Equal("Start speaking", start.Text);
         PumpUntil(() => !editor.ReadOnly);
         Assert.Equal(new[] { "First", "Second" }, input.Messages);
-        Assert.All(input.Methods, method => Assert.Equal(InputMethod.CtrlVDirect, method));
+        Assert.All(input.Timings, timings => Assert.Equal(new InputTimings(250, 150, 10), timings));
         var log = form.ActivityLog;
         Assert.Contains("MESSAGE 1/2 | source line 1 | 5 chars | First", log);
         Assert.Contains("MESSAGE 2/2 | source line 2 | 6 chars | Second", log);
@@ -272,11 +272,11 @@ public sealed class SpeakerFormTests
     {
         public TaskCompletionSource FinishFirst { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         public List<string> Messages { get; } = [];
-        public List<InputMethod> Methods { get; } = [];
+        public List<InputTimings> Timings { get; } = [];
         public async Task SendAsync(ClientTarget target, string text, InputTimings timings, CancellationToken cancellationToken)
         {
             Messages.Add(text);
-            Methods.Add(timings.InputMethod);
+            Timings.Add(timings);
             if (Messages.Count == 1) await FinishFirst.Task;
         }
     }

@@ -128,7 +128,7 @@ internal sealed partial class SpeakerForm : DarkWindow
     internal string ActivityLog => string.Join(System.Environment.NewLine, logs);
 
     private bool Busy => runner.IsActive || testing;
-    private InputTimings Timings => new((int)chatOpen.Value, (int)submitDelay.Value, settings.KeyGapMs, InputMethod.CtrlVDirect);
+    private InputTimings Timings => new((int)chatOpen.Value, (int)submitDelay.Value, settings.KeyGapMs);
 
     private void ScheduleValidation()
     {

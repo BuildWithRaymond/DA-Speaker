@@ -5,8 +5,7 @@ internal sealed record ClientTarget(nint Handle, uint ProcessId, string Title)
     public override string ToString() => $"{(string.IsNullOrWhiteSpace(Title) ? "Dark Ages" : Title)} / PID {ProcessId} / HWND 0x{Handle:X}";
 }
 
-internal enum InputMethod { CtrlV, CtrlOnly, AsciiKeyPairs, CtrlVDirect }
-internal sealed record InputTimings(int ChatOpenDelayMs = 250, int PasteDelayMs = 150, int KeyGapMs = 10, InputMethod InputMethod = InputMethod.CtrlV);
+internal sealed record InputTimings(int ChatOpenDelayMs = 250, int PasteDelayMs = 150, int KeyGapMs = 10);
 internal readonly record struct KeyMessage(uint Message, nuint WParam, nint LParam);
 
 internal interface IWindowApi
@@ -15,7 +14,6 @@ internal interface IWindowApi
     string GetClassName(nint handle);
     uint GetProcessId(nint handle);
     uint MapScanCode(uint key);
-    short MapCharacter(nint handle, char character);
     bool Post(nint handle, KeyMessage message, out int error);
     bool Send(nint handle, KeyMessage message, out int error);
 }
@@ -67,75 +65,31 @@ internal sealed class ChatInput(IWindowApi windows, IClipboardService clipboard,
             throw new ArgumentException("Chat text must contain 1–59 printable ASCII characters on one line.", nameof(text));
         if (timings.ChatOpenDelayMs is < 0 or > 10000 || timings.PasteDelayMs is < 0 or > 10000 || timings.KeyGapMs is < 0 or > 1000)
             throw new ArgumentOutOfRangeException(nameof(timings));
-        if (!Enum.IsDefined(timings.InputMethod)) throw new ArgumentOutOfRangeException(nameof(timings));
         ct.ThrowIfCancellationRequested();
         Validate(target);
 
-        var ascii = timings.InputMethod == InputMethod.AsciiKeyPairs;
-        var characters = new List<(uint Key, uint[] Modifiers)>();
-        var keys = new HashSet<uint> { 0x0D };
-        if (ascii)
-        {
-            foreach (var character in text)
-            {
-                var mapping = windows.MapCharacter(target.Handle, character);
-                var flags = (mapping >> 8) & 0xFF;
-                var key = (uint)(mapping & 0xFF);
-                if (mapping == -1 || (flags & ~7) != 0 || key == 0)
-                    throw new InvalidOperationException($"Cannot map '{character}' using the client's keyboard layout. No input was posted.");
-                var modifiers = new List<uint>();
-                if ((flags & 1) != 0) modifiers.Add(0x10);
-                if ((flags & 2) != 0) modifiers.Add(0x11);
-                if ((flags & 4) != 0) modifiers.Add(0x12);
-                keys.Add(key);
-                keys.UnionWith(modifiers);
-                characters.Add((key, modifiers.ToArray()));
-            }
-        }
-        else
-        {
-            keys.Add(0x11);
-            if (timings.InputMethod is InputMethod.CtrlV or InputMethod.CtrlVDirect) keys.Add(0x56);
-        }
+        uint[] keys = [0x0D, 0x11, 0x56];
         var scans = keys.ToDictionary(k => k, k => windows.MapScanCode(k));
         if (scans.Values.Any(s => s is 0 or > 255))
             throw new InvalidOperationException("Keyboard scan-code mapping failed. No input was posted.");
 
         var held = new List<uint>();
-        var snapshot = ascii ? null : await clipboard.CaptureAsync(ct);
+        var snapshot = await clipboard.CaptureAsync(ct);
         Exception? failure = null;
         try
         {
-            log(ascii ? "ASCII key pairs. Clipboard untouched. Opening local chat." : "Clipboard saved. Opening local chat.");
+            log("Clipboard saved. Opening local chat.");
             await Key(0x0D, false);
             await Key(0x0D, true);
             await Wait(timings.ChatOpenDelayMs);
-            if (ascii)
-            {
-                for (var i = 0; i < characters.Count; i++)
-                {
-                    var character = characters[i];
-                    log($"Character {i + 1}/{characters.Count}: '{text[i]}' VK=0x{character.Key:X2} modifiers={string.Join(',', character.Modifiers.Select(m => $"0x{m:X2}"))}");
-                    foreach (var modifier in character.Modifiers) await Key(modifier, false);
-                    await Key(character.Key, false);
-                    await Key(character.Key, true);
-                    foreach (var modifier in character.Modifiers.Reverse()) await Key(modifier, true);
-                }
-            }
-            else
-            {
-                await clipboard.SetTextAsync(text, ct);
-                log("Clipboard set to current message.");
-                await Wait(50);
-                log($"Paste trigger: {timings.InputMethod}. Testing client behavior; not a delivery acknowledgement.");
-                await Key(0x11, false);
-                if (timings.InputMethod is InputMethod.CtrlV or InputMethod.CtrlVDirect)
-                {
-                    await Key(0x56, false);
-                    await Key(0x56, true);
-                }
-                await Key(0x11, true);
-            }
+            await clipboard.SetTextAsync(text, ct);
+            log("Clipboard set to current message.");
+            await Wait(50);
+            log("Pasting with direct Ctrl+V.");
+            await Key(0x11, false);
+            await Key(0x56, false);
+            await Key(0x56, true);
+            await Key(0x11, true);
             await Wait(timings.PasteDelayMs);
             await Key(0x0D, false);
             await Key(0x0D, true);
@@ -152,7 +106,7 @@ internal sealed class ChatInput(IWindowApi windows, IClipboardService clipboard,
                 try
                 {
                     Validate(target);
-                    await DispatchAsync(target, KeyboardMessage.Create(key, scans[key], true), timings.InputMethod == InputMethod.CtrlVDirect && key != 0x0D);
+                    await DispatchAsync(target, KeyboardMessage.Create(key, scans[key], true), key != 0x0D);
                 }
                 catch (Exception ex)
                 {
@@ -160,18 +114,15 @@ internal sealed class ChatInput(IWindowApi windows, IClipboardService clipboard,
                     failure = Combine(failure, ex);
                 }
             }
-            if (snapshot is not null)
+            try
             {
-                try
-                {
-                    await clipboard.RestoreAsync(snapshot);
-                    log("Clipboard restored.");
-                }
-                catch (Exception ex)
-                {
-                    log($"Clipboard restore failed: {ex.Message}");
-                    failure = Combine(failure, ex);
-                }
+                await clipboard.RestoreAsync(snapshot);
+                log("Clipboard restored.");
+            }
+            catch (Exception ex)
+            {
+                log($"Clipboard restore failed: {ex.Message}");
+                failure = Combine(failure, ex);
             }
         }
         if (failure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
@@ -190,7 +141,7 @@ internal sealed class ChatInput(IWindowApi windows, IClipboardService clipboard,
             // A timed-out SendMessage may already have reached the receiver.
             // Track down keys before attempting dispatch so cleanup also covers that case.
             if (!up) held.Add(key);
-            await DispatchAsync(target, KeyboardMessage.Create(key, scans[key], up), timings.InputMethod == InputMethod.CtrlVDirect && key != 0x0D);
+            await DispatchAsync(target, KeyboardMessage.Create(key, scans[key], up), key != 0x0D);
             if (up) held.Remove(key);
             await Wait(timings.KeyGapMs);
         }

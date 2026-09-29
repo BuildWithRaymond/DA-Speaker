@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Removed the original input diagnostic prototype and experimental input methods.
+- Kept the verified direct Ctrl+V path, Send test, and Settings troubleshooting tools.
+- Removed unused parser data and theme color.
+
 ## 1.1.0 — First public release
 
 - Dark desktop interface with gold accents, a custom window frame, and subtle input borders.

@@ -45,53 +45,20 @@ public sealed class InputTests
     }
 
     [Fact]
-    public async Task CtrlOnlyPasteDoesNotPostTheExtraV()
-    {
-        var env = new Environment();
-        await env.Input.SendAsync(Target, "GLIOCA TEST", new(InputMethod: InputMethod.CtrlOnly), default);
-        Assert.Equal(new[] { "capture", "down:13", "wait:10", "up:13", "wait:10", "wait:250", "text:GLIOCA TEST", "wait:50", "down:17", "wait:10", "up:17", "wait:10", "wait:150", "down:13", "wait:10", "up:13", "wait:10", "wait:100", "restore" }, env.Events);
-        Assert.DoesNotContain(env.Posts, p => p.Message.WParam == 0x56);
-        Assert.Equal("original", env.Clipboard);
-    }
-
-    [Fact]
-    public async Task CtrlOnlyDoesNotRequireVScanCode()
-    {
-        var env = new Environment { UnmappableKey = 0x56 };
-        await env.Input.SendAsync(Target, "GLIOCA TEST", new(InputMethod: InputMethod.CtrlOnly), default);
-        Assert.Equal(6, env.Posts.Count);
-    }
-
-    [Fact]
     public async Task TargetLostDuringWaitStopsAndRestoresClipboard()
     {
         var env = new Environment();
         env.OnWait = ms => { if (ms == 150) env.Exists = false; };
         await Assert.ThrowsAsync<InvalidOperationException>(() => env.Input.SendAsync(Target, "GLIOCA TEST", new(), default));
-        Assert.Equal(6, env.Posts.Count);
+        Assert.Equal(2, env.Posts.Count);
         Assert.Equal("original", env.Clipboard);
     }
 
     [Fact]
-    public async Task AsciiFallbackTypesCharactersAndShiftWithoutClipboard()
-    {
-        var env = new Environment { CaptureFails = true };
-        env.CharacterMap['A'] = 0x0141;
-        env.CharacterMap['a'] = 0x0041;
-        env.CharacterMap['!'] = 0x0131;
-        await env.Input.SendAsync(Target, "Aa!", new(InputMethod: InputMethod.AsciiKeyPairs), default);
-        Assert.Equal(new[] { "down:13", "up:13", "down:16", "down:65", "up:65", "up:16", "down:65", "up:65", "down:16", "down:49", "up:49", "up:16", "down:13", "up:13" }, env.Events.Where(e => e.StartsWith("down:") || e.StartsWith("up:")));
-        Assert.DoesNotContain("capture", env.Events);
-        Assert.DoesNotContain("restore", env.Events);
-        Assert.Equal("original", env.Clipboard);
-        Assert.All(env.MappedHandles, h => Assert.Equal(Target.Handle, h));
-    }
-
-    [Fact]
-    public async Task DirectPasteSendsCtrlVInOrderAndKeepsEnterOnProvenPath()
+    public async Task DefaultInputSendsCtrlVInOrderAndKeepsEnterOnProvenPath()
     {
         var env = new Environment();
-        await env.Input.SendAsync(Target, "GLIOCA TEST", new(InputMethod: InputMethod.CtrlVDirect), default);
+        await env.Input.SendAsync(Target, "GLIOCA TEST", new(), default);
         Assert.Equal(4, env.Posts.Count);
         Assert.All(env.Posts, p => Assert.Equal((nuint)13, p.Message.WParam));
         Assert.Equal(new uint[] { 17, 86, 86, 17 }, env.Sends.Select(p => (uint)p.Message.WParam));
@@ -115,7 +82,7 @@ public sealed class InputTests
             Assert.Equal((nuint)13, env.Posts[^1].Message.WParam);
             Assert.DoesNotContain("restore", env.Events);
         };
-        await env.Input.SendAsync(Target, "GLIOCA TEST", new(InputMethod: InputMethod.CtrlVDirect), default);
+        await env.Input.SendAsync(Target, "GLIOCA TEST", new(), default);
         Assert.True(observed, "Missing delay after submit Enter.");
         Assert.Equal(new[] { "up:13", "wait:10", "wait:100", "restore" }, env.Events.TakeLast(4));
         Assert.Equal("original", env.Clipboard);
@@ -126,7 +93,7 @@ public sealed class InputTests
     {
         var env = new Environment();
         env.OnWait = ms => { if (ms == 100) env.Exists = false; };
-        await Assert.ThrowsAsync<InvalidOperationException>(() => env.Input.SendAsync(Target, "GLIOCA TEST", new(InputMethod: InputMethod.CtrlVDirect), default));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => env.Input.SendAsync(Target, "GLIOCA TEST", new(), default));
         Assert.Equal("original", env.Clipboard);
         Assert.Equal("restore", env.Events.Last());
     }
@@ -135,48 +102,19 @@ public sealed class InputTests
     public async Task DirectPasteFailureReleasesControlAndRestoresClipboard()
     {
         var env = new Environment { FailSend = 2 };
-        var failure = await Assert.ThrowsAsync<InvalidOperationException>(() => env.Input.SendAsync(Target, "GLIOCA TEST", new(InputMethod: InputMethod.CtrlVDirect), default));
+        var failure = await Assert.ThrowsAsync<InvalidOperationException>(() => env.Input.SendAsync(Target, "GLIOCA TEST", new(), default));
         Assert.Contains("SendMessageTimeoutW", failure.Message);
         Assert.Contains("up:17", env.Events);
         Assert.All(env.Posts, p => Assert.Equal((nuint)13, p.Message.WParam));
         Assert.Equal("original", env.Clipboard);
     }
 
-    [Theory]
-    [InlineData(-1)]
-    [InlineData(0x0841)]
-    public async Task AsciiFallbackRejectsUnmappableCharactersBeforeOpeningChat(int mapping)
-    {
-        var env = new Environment();
-        env.CharacterMap['A'] = (short)mapping;
-        await Assert.ThrowsAsync<InvalidOperationException>(() => env.Input.SendAsync(Target, "A", new(InputMethod: InputMethod.AsciiKeyPairs), default));
-        Assert.Empty(env.Events);
-    }
-
     [Fact]
-    public async Task AsciiFallbackReleasesModifiersAfterFailure()
+    public async Task FailedSubmitRestoresClipboardAndReportsNativeError()
     {
-        var env = new Environment { FailPost = 4 };
-        env.CharacterMap['A'] = 0x0141;
-        await Assert.ThrowsAsync<InvalidOperationException>(() => env.Input.SendAsync(Target, "A", new(InputMethod: InputMethod.AsciiKeyPairs), default));
-        Assert.Equal("up:16", env.Events.Last());
-        Assert.DoesNotContain("capture", env.Events);
-    }
-
-    [Fact]
-    public async Task AsciiFallbackSupportsControlAltMapping()
-    {
-        var env = new Environment();
-        env.CharacterMap['@'] = 0x0651;
-        await env.Input.SendAsync(Target, "@", new(InputMethod: InputMethod.AsciiKeyPairs), default);
-        Assert.Equal(new[] { "down:13", "up:13", "down:17", "down:18", "down:81", "up:81", "up:18", "up:17", "down:13", "up:13" }, env.Events.Where(e => e.StartsWith("down:") || e.StartsWith("up:")));
-    }
-
-    [Fact]
-    public async Task FailedPasteReleasesKeysRestoresClipboardAndReportsNativeError()
-    {
-        var env = new Environment { FailPost = 4 };
+        var env = new Environment { FailPost = 3 };
         var error = await Assert.ThrowsAsync<InvalidOperationException>(() => env.Input.SendAsync(Target, "GLIOCA TEST", new(), default));
+        Assert.Contains("PostMessageW", error.Message);
         Assert.Contains("5", error.Message);
         Assert.Contains("elevation", error.Message);
         Assert.Contains("up:17", env.Events);
@@ -241,9 +179,6 @@ public sealed class InputTests
         public string ClassName = "Darkages";
         public uint Pid = 456;
         public uint ScanCode = 28;
-        public uint UnmappableKey;
-        public Dictionary<char, short> CharacterMap { get; } = [];
-        public List<nint> MappedHandles { get; } = [];
         public int FailPost;
         public int FailSend;
         public bool CaptureFails;
@@ -255,12 +190,7 @@ public sealed class InputTests
         public bool IsWindow(nint h) => Exists;
         public string GetClassName(nint h) => ClassName;
         public uint GetProcessId(nint h) => Pid;
-        public uint MapScanCode(uint key) => key == UnmappableKey ? 0 : ScanCode;
-        public short MapCharacter(nint handle, char character)
-        {
-            MappedHandles.Add(handle);
-            return CharacterMap.GetValueOrDefault(character, (short)-1);
-        }
+        public uint MapScanCode(uint key) => ScanCode;
         public bool Post(nint h, KeyMessage m, out int error)
         {
             Posts.Add((h, m));

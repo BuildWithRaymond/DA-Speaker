@@ -23,7 +23,7 @@ internal static class ScriptParser
             throw new ArgumentOutOfRangeException(nameof(options));
         var raw = new List<QueueStep>();
         var errors = new List<ScriptError>();
-        var words = new List<(string Text, int Line, int Offset)>();
+        var words = new List<(string Text, int Line)>();
         var lineNumber = 0;
         foreach (Match line in Regex.Matches(script, @"[^\r\n]*(?:\r\n|\r|\n|$)"))
         {
@@ -65,7 +65,7 @@ internal static class ScriptParser
             foreach (var word in lineWords)
             {
                 if (word.Length > 59) errors.Add(new(lineNumber, line.Index + word.Index, word.Length, "Word exceeds 59 characters. Shorten it; words are never split."));
-                else words.Add((word.Value, lineNumber, line.Index + word.Index));
+                else words.Add((word.Value, lineNumber));
             }
         }
         FlushWords();

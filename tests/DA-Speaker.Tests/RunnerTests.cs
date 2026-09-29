@@ -14,7 +14,7 @@ public sealed class RunnerTests
         const string script = "Lady Glioca, let your mercy remain with us tonight.\nLet us carry enough beyond these walls for ourselves,\nand a little extra for whoever decides to test it first.\nSomeone will. We have all lived in Temuair long enough.\nGo beneath Glioca's light, Aislings, and go in peace.";
         var input = new RecordingInput();
         var runner = new ScriptRunner(input, new ManualClock());
-        await runner.StartAsync(ScriptParser.Parse(script, new(true, 0, 0)), Target, new(InputMethod: InputMethod.CtrlVDirect));
+        await runner.StartAsync(ScriptParser.Parse(script, new(true, 0, 0)), Target, new());
         Assert.Equal(5, input.Messages.Count);
         Assert.Equal("We have all lived in Temuair long enough. Go beneath", input.Messages[^2]);
         Assert.Equal("Glioca's light, Aislings, and go in peace.", input.Messages[^1]);
@@ -27,7 +27,7 @@ public sealed class RunnerTests
         var clock = new ManualClock();
         var input = new RecordingInput();
         var runner = new ScriptRunner(input, clock);
-        var run = runner.StartAsync(Plan(), Target, new(InputMethod: InputMethod.CtrlVDirect));
+        var run = runner.StartAsync(Plan(), Target, new());
         await Until(() => runner.RemainingDelay > TimeSpan.Zero);
         Assert.Equal(new[] { "First" }, input.Messages);
         clock.Advance(3499);
