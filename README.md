@@ -50,7 +50,7 @@ Full-size screenshots: [Compact preview](docs/images/screenshots/ceremonial-comp
 ### Install and speak
 
 1. Download the Windows ZIP from [Releases](https://github.com/BuildWithRaymond/DASpeaker/releases/latest) and extract it.
-2. Open **DASpeaker.exe** and accept the administrator prompt.
+2. Run the executable from the extracted ZIP and accept the administrator prompt.
 3. Open Dark Ages, then select its window in DASpeaker. Close local chat.
 4. Choose **Send test** and check for `GLIOCA TEST` in game.
 5. Paste your script, review **Message preview**, and choose **Start speaking**.
