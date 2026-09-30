@@ -28,7 +28,7 @@ public sealed class WindowsTests
     private sealed class TranslationProbe : NativeWindow, IDisposable
     {
         public List<int> Messages { get; } = [];
-        public TranslationProbe() => CreateHandle(new CreateParams { Caption = "DA Speaker translation test", Parent = (nint)(-3) });
+        public TranslationProbe() => CreateHandle(new CreateParams { Caption = "DASpeaker translation test", Parent = (nint)(-3) });
         protected override void WndProc(ref Message m)
         {
             if (m.Msg is 0x100 or 0x101 or 0x102) Messages.Add(m.Msg);
@@ -89,14 +89,14 @@ public sealed class WindowsTests
         original.SetData(DataFormats.UnicodeText, false, "Original text");
         original.SetData(DataFormats.Html, false, "<b>Original text</b>");
         using var sourceStream = new MemoryStream([1, 2, 3]);
-        original.SetData("DA Speaker test bytes", false, sourceStream);
+        original.SetData("DASpeaker test bytes", false, sourceStream);
         var snapshot = WindowsClipboard.Materialize(original);
         sourceStream.WriteByte(9);
         Assert.True(snapshot.TryGetData<string>(DataFormats.UnicodeText, false, out var text));
         Assert.Equal("Original text", text);
         Assert.True(snapshot.TryGetData<string>(DataFormats.Html, false, out var html));
         Assert.Equal("<b>Original text</b>", html);
-        Assert.True(snapshot.TryGetData<MemoryStream>("DA Speaker test bytes", false, out var copied));
+        Assert.True(snapshot.TryGetData<MemoryStream>("DASpeaker test bytes", false, out var copied));
         Assert.Equal(new byte[] { 1, 2, 3 }, copied.ToArray());
     });
 

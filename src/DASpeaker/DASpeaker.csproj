@@ -6,7 +6,7 @@
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>DA-Speaker</AssemblyName>
+    <AssemblyName>DASpeaker</AssemblyName>
     <Version>1.1.0</Version>
     <ApplicationIcon>Assets\Speaker.ico</ApplicationIcon>
     <RootNamespace>DASpeaker</RootNamespace>
@@ -17,6 +17,6 @@
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\Speaker.ico" LogicalName="DASpeaker.Speaker.ico" />
-    <InternalsVisibleTo Include="DA-Speaker.Tests" />
+    <InternalsVisibleTo Include="DASpeaker.Tests" />
   </ItemGroup>
 </Project>

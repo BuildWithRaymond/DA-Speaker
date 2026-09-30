@@ -1,8 +1,0 @@
-<Solution>
-  <Folder Name="/src/">
-    <Project Path="src/DA-Speaker/DA-Speaker.csproj" />
-  </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/DA-Speaker.Tests/DA-Speaker.Tests.csproj" />
-  </Folder>
-</Solution>

@@ -56,7 +56,7 @@ internal sealed partial class SpeakerForm : DarkWindow
     {
         this.settings = settings;
         this.store = store;
-        Text = "DA Speaker";
+        Text = "DASpeaker";
         Icon = SpeakerTheme.LoadIcon();
         Font = new Font("Segoe UI", 10);
         BackColor = Background;
@@ -119,7 +119,7 @@ internal sealed partial class SpeakerForm : DarkWindow
         };
         FormClosing += OnClosing;
         FormClosed += (_, _) => { heartbeat.Dispose(); editDebounce.Dispose(); autosave.Dispose(); };
-        Log("DA Speaker 1.1.0. Direct Ctrl+V; posted Enter; 100 ms after submit before clipboard restore. Messages limited to 59 characters.");
+        Log("DASpeaker 1.1.0. Direct Ctrl+V; posted Enter; 100 ms after submit before clipboard restore. Messages limited to 59 characters.");
         if (startupWarning is not null) Log(startupWarning);
         ValidateScript();
         UpdateEnabled();
@@ -438,7 +438,7 @@ internal sealed partial class SpeakerForm : DarkWindow
 
     private void SaveLog()
     {
-        using var dialog = new SaveFileDialog { Filter = "Text log (*.txt)|*.txt", FileName = $"DA-Speaker-{DateTime.Now:yyyyMMdd-HHmmss}.txt" };
+        using var dialog = new SaveFileDialog { Filter = "Text log (*.txt)|*.txt", FileName = $"DASpeaker-{DateTime.Now:yyyyMMdd-HHmmss}.txt" };
         if (dialog.ShowDialog(this) != DialogResult.OK) return;
         try { File.WriteAllLines(dialog.FileName, logs); } catch (Exception ex) { Report(ex); }
     }

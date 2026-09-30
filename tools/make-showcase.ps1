@@ -40,7 +40,7 @@ function New-Canvas([int]$width, [int]$height) {
     $rule = [System.Drawing.Pen]::new([System.Drawing.ColorTranslator]::FromHtml('#393328'), 1)
     $canvas.DrawLine($rule, 80, 85, $width - 80, 85)
     $rule.Dispose()
-    Paint-Text $canvas 'DA SPEAKER' 80 42 20 '#D8B878'
+    Paint-Text $canvas 'DASPEAKER' 80 42 20 '#D8B878'
     Paint-Text $canvas 'DARK AGES / WINDOWS' ($width - 370) 45 16 '#A6A5A1'
     return @{ Bitmap = $bitmap; Canvas = $canvas }
 }
@@ -65,7 +65,7 @@ Paint-Text $detail.Canvas 'Shortcuts, timing, and a little fine-tuning.' 920 336
 Paint-Screen $detail.Canvas 'ceremonial-compact.png' 86 406 710
 Paint-Screen $detail.Canvas 'ceremonial-settings.png' 920 406 580
 Paint-Text $detail.Canvas 'Actual application screens with a sample script.' 82 1134 18 '#8F939D'
-Paint-Text $detail.Canvas 'DA Speaker 1.1.0' 1350 1134 18 '#D8B878'
+Paint-Text $detail.Canvas 'DASpeaker 1.1.0' 1350 1134 18 '#D8B878'
 $detail.Bitmap.Save((Join-Path $imageRoot 'ceremonial-controls.png'), [System.Drawing.Imaging.ImageFormat]::Png)
 $detail.Canvas.Dispose()
 $detail.Bitmap.Dispose()

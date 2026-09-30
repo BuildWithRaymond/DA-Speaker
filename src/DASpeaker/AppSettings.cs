@@ -21,15 +21,16 @@ internal sealed record AppSettings
     public string LastTitle { get; init; } = "";
 }
 
-internal sealed class SettingsStore(string path)
+internal sealed class SettingsStore(string path, string? legacyPath = null)
 {
     public AppSettings Load(out string? warning)
     {
         warning = null;
-        if (!File.Exists(path)) return new();
+        var source = File.Exists(path) ? path : legacyPath;
+        if (source is null || !File.Exists(source)) return new();
         try
         {
-            var settings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(path)) ?? new();
+            var settings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText(source)) ?? new();
             return settings with
             {
                 Script = settings.Script ?? "",

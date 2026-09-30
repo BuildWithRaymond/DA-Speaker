@@ -1,6 +1,6 @@
 # Input design
 
-DA Speaker targets the selected Dark Ages window and validates its handle,
+DASpeaker targets the selected Dark Ages window and validates its handle,
 process ID, and `Darkages` window class throughout dispatch. It does not change
 the selected target during playback.
 

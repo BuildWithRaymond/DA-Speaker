@@ -1,4 +1,4 @@
-# Using DA Speaker
+# Using DASpeaker
 
 ## Choose your game window
 
@@ -13,7 +13,7 @@ switch focus. If the game restarts, Stop, Refresh, and select the new window.
 ## Prepare your script
 
 Paste text into **Your script**, or choose **Open** to load a text file. **Save**
-writes a separate text file. DA Speaker also remembers your current draft.
+writes a separate text file. DASpeaker also remembers your current draft.
 
 The preview shows exact messages, character counts, and pauses. Select a message
 to locate its source text; hover over it to see its source line. At smaller window
@@ -73,7 +73,7 @@ Shortcuts are off by default. Conflicts with other apps are reported.
 
 ## If speaking is interrupted
 
-DA Speaker pauses on input errors. Check the game and clear or close any pending
+DASpeaker pauses on input errors. Check the game and clear or close any pending
 chat before resuming. The failed message may already have appeared; retrying can
 produce a duplicate. The app asks for acknowledgment before recovery.
 
@@ -86,5 +86,6 @@ delivery. Inspect the game if a message appears missing.
 ## Where your draft lives
 
 Draft, timings, window position, wrapping, shortcut preference, and the remembered
-window hint are stored in `%LocalAppData%\DA Speaker\settings.json`. The remembered
+window hint are stored in `%LocalAppData%\DASpeaker\settings.json`. Existing settings
+from the former application folder are loaded automatically. The remembered
 window must still match its identity before use.

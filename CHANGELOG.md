@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Renamed the app, executable, solution, and repository references to DASpeaker.
+- Added DASpeaker launch artwork to the README and kept existing drafts available after the settings folder rename.
 - Removed the original input diagnostic prototype and experimental input methods.
 - Kept the verified direct Ctrl+V path, Send test, and Settings troubleshooting tools.
 - Removed unused parser data and theme color.

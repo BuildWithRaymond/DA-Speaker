@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an improvement to DA Speaker.
+description: Suggest an improvement to DASpeaker.
 title: "[Feature]: "
 body:
   - type: textarea

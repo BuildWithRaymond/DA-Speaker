@@ -180,7 +180,7 @@ public sealed class SpeakerFormTests
         using var image = new Bitmap(form.Width, form.Height);
         form.DrawToBitmap(image, new Rectangle(Point.Empty, form.Size));
         var root = new DirectoryInfo(AppContext.BaseDirectory);
-        while (root is not null && !File.Exists(Path.Combine(root.FullName, "DA-Speaker.slnx"))) root = root.Parent;
+        while (root is not null && !File.Exists(Path.Combine(root.FullName, "DASpeaker.slnx"))) root = root.Parent;
         Assert.NotNull(root);
         var directory = Path.Combine(root.FullName, "artifacts", "design");
         Directory.CreateDirectory(directory);
@@ -294,7 +294,7 @@ public sealed class SpeakerFormTests
             {
                 Application.EnableVisualStyles();
                 using var form = new SpeakerForm(new AppSettings { Script = "Aislings, gather beneath the gentle light of Glioca.\nTonight we honor compassion, mercy, and patience.\n\n[wait 5s]\n\nMay kindness guide us.", LineDelayMs = 3500 });
-                Assert.Equal("DA Speaker", form.Text);
+                Assert.Equal("DASpeaker", form.Text);
                 var editor = Assert.IsType<RichTextBox>(Assert.Single(form.Controls.Find("scriptEditor", true)));
                 Assert.Contains("Glioca", editor.Text);
                 Assert.Equal(3.5m, Assert.IsType<NumericUpDown>(Assert.Single(form.Controls.Find("lineDelay", true))).Value);
@@ -312,7 +312,7 @@ public sealed class SpeakerFormTests
                 using var image = new Bitmap(form.Width, form.Height);
                 form.DrawToBitmap(image, new Rectangle(Point.Empty, form.Size));
                 var root = new DirectoryInfo(AppContext.BaseDirectory);
-                while (root is not null && !File.Exists(Path.Combine(root.FullName, "DA-Speaker.slnx"))) root = root.Parent;
+                while (root is not null && !File.Exists(Path.Combine(root.FullName, "DASpeaker.slnx"))) root = root.Parent;
                 Assert.NotNull(root);
                 Directory.CreateDirectory(Path.Combine(root.FullName, "artifacts"));
                 image.Save(Path.Combine(root.FullName, "artifacts", "speaker-preview.png"));

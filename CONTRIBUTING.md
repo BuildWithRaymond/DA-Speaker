@@ -1,4 +1,4 @@
-# Contributing to DA Speaker
+# Contributing to DASpeaker
 
 Bug reports, documentation improvements, and focused pull requests are welcome.
 

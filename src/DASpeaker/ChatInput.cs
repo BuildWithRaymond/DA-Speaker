@@ -172,7 +172,7 @@ internal sealed class ChatInput(IWindowApi windows, IClipboardService clipboard,
         var api = direct ? "SendMessageTimeoutW" : "PostMessageW";
         if (!succeeded)
         {
-            var hint = error == 5 ? " DA Speaker likely needs the same elevation level as Dark Ages." : "";
+            var hint = error == 5 ? " DASpeaker likely needs the same elevation level as Dark Ages." : "";
             var reason = error == 0 ? "No error code supplied; timeout or generic failure." : $"Win32 error {error} ({new System.ComponentModel.Win32Exception(error).Message}).";
             var detail = $"{api} failed: {reason}{hint}";
             log(detail);

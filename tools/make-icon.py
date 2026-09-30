@@ -3,7 +3,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 root = Path(__file__).resolve().parents[1]
-assets = root / "src" / "DA-Speaker" / "Assets"
+assets = root / "src" / "DASpeaker" / "Assets"
 assets.mkdir(parents=True, exist_ok=True)
 scale = 4
 image = Image.new("RGBA", (256 * scale, 256 * scale))

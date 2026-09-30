@@ -4,7 +4,7 @@
 
 Reference project: [ewrogers/SleepHunter4](https://github.com/ewrogers/SleepHunter4).
 
-DA Speaker's Windows keyboard-message construction and target-validation
+DASpeaker's Windows keyboard-message construction and target-validation
 techniques were informed by SleepHunter's input implementation. The upstream
 license notice is retained below. No SleepHunter executable or library is bundled.
 

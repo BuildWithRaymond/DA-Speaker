@@ -1,7 +1,7 @@
 # Reporting a security issue
 
 Please report vulnerabilities privately using
-[GitHub's vulnerability reporting form](https://github.com/BuildWithRaymond/DA-Speaker/security/advisories/new).
+[GitHub's vulnerability reporting form](https://github.com/BuildWithRaymond/DASpeaker/security/advisories/new).
 Avoid putting sensitive details, credentials, or personal chat logs in a public issue.
 
 Include the affected version, reproduction steps, and the expected and actual

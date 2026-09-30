@@ -13,7 +13,7 @@ internal sealed class SpeakerSettingsDialog : DarkWindow
 
     public SpeakerSettingsDialog(AppSettings settings, int chatOpenMs, int submitMs, string log, bool busy, Action saveLog) : base(false)
     {
-        Text = "DA Speaker · Settings";
+        Text = "DASpeaker · Settings";
         Icon = SpeakerTheme.LoadIcon();
         Font = new Font("Segoe UI", 10);
         BackColor = SpeakerTheme.Background;

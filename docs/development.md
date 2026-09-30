@@ -11,11 +11,11 @@ No game client is needed to build or run the automated tests.
 ## Build and test
 
 ```powershell
-git clone https://github.com/BuildWithRaymond/DA-Speaker.git
-cd DA-Speaker
-dotnet restore DA-Speaker.slnx
-dotnet build DA-Speaker.slnx -c Release --no-restore
-dotnet test DA-Speaker.slnx -c Release --no-build
+git clone https://github.com/BuildWithRaymond/DASpeaker.git
+cd DASpeaker
+dotnet restore DASpeaker.slnx
+dotnet build DASpeaker.slnx -c Release --no-restore
+dotnet test DASpeaker.slnx -c Release --no-build
 ```
 
 The test suite covers script parsing, playback timing, pause/resume/stop, recovery,
@@ -26,7 +26,7 @@ screenshots under `artifacts/design/`.
 ## Run
 
 ```powershell
-dotnet run --project src/DA-Speaker -c Release
+dotnet run --project src/DASpeaker -c Release
 ```
 
 The application requests administrator rights when launched. For an actual game
@@ -39,7 +39,7 @@ direct Ctrl+V path.
 ## Publish
 
 ```powershell
-dotnet publish src/DA-Speaker/DA-Speaker.csproj -c Release -r win-x64 -p:SelfContained=false -p:PublishSelfContained=false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o artifacts/release
+dotnet publish src/DASpeaker/DASpeaker.csproj -c Release -r win-x64 -p:SelfContained=false -p:PublishSelfContained=false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o artifacts/release
 ```
 
 The result requires the .NET 10 Desktop Runtime x64. Include `LICENSE`,
@@ -49,8 +49,8 @@ The result requires the .NET 10 Desktop Runtime x64. Include `LICENSE`,
 
 | Path | Purpose |
 | --- | --- |
-| `src/DA-Speaker/` | Windows Forms app, parsing, playback, settings, and input |
-| `tests/DA-Speaker.Tests/` | Unit tests and Windows UI/native checks |
+| `src/DASpeaker/` | Windows Forms app, parsing, playback, settings, and input |
+| `tests/DASpeaker.Tests/` | Unit tests and Windows UI/native checks |
 | `docs/` | Usage, input design, and showcase images |
 | `examples/` | Ready-to-edit scripts |
 | `tools/` | Optional visual asset generation |

@@ -27,7 +27,7 @@ Date: 2026-09-28.
 
 ## Local artifacts
 
-- Executable: `artifacts/premium/DA-Speaker.exe`.
+- Executable: `artifacts/premium/DASpeaker.exe`.
 - Before: `artifacts/design/before-main.png`.
 - After: `docs/images/screenshots/ceremonial-main.png`.
 - State captures: `artifacts/design/`.

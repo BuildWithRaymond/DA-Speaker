@@ -6,9 +6,29 @@ namespace DASpeaker.Tests;
 public sealed class SettingsTests
 {
     [Fact]
+    public void LoadsExistingSettingsAfterApplicationFolderRename()
+    {
+        var root = Path.Combine(Path.GetTempPath(), $"daspeaker-{Guid.NewGuid():N}");
+        var oldPath = Path.Combine(root, "DA Speaker", "settings.json");
+        var newPath = Path.Combine(root, "DASpeaker", "settings.json");
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(oldPath)!);
+            File.WriteAllText(oldPath, "{\"Script\":\"Keep this draft\"}");
+            var store = new SettingsStore(newPath, oldPath);
+            Assert.Equal("Keep this draft", store.Load(out var warning).Script);
+            Assert.Null(warning);
+            store.Save(new AppSettings { Script = "New draft" });
+            Assert.True(File.Exists(newPath));
+            Assert.Equal("New draft", store.Load(out _).Script);
+        }
+        finally { if (Directory.Exists(root)) Directory.Delete(root, true); }
+    }
+
+    [Fact]
     public void SavesAndLoadsDraftAndPreferencesAtomically()
     {
-        var path = Path.Combine(Path.GetTempPath(), $"da-speaker-{Guid.NewGuid():N}.json");
+        var path = Path.Combine(Path.GetTempPath(), $"daspeaker-{Guid.NewGuid():N}.json");
         try
         {
             var store = new SettingsStore(path);
@@ -26,7 +46,7 @@ public sealed class SettingsTests
     [Fact]
     public void CorruptSettingsFallBackWithWarning()
     {
-        var path = Path.Combine(Path.GetTempPath(), $"da-speaker-{Guid.NewGuid():N}.json");
+        var path = Path.Combine(Path.GetTempPath(), $"daspeaker-{Guid.NewGuid():N}.json");
         try
         {
             File.WriteAllText(path, "not json");
@@ -40,7 +60,7 @@ public sealed class SettingsTests
     [Fact]
     public void OutOfRangePreferencesAreClampedWithoutLosingDraft()
     {
-        var path = Path.Combine(Path.GetTempPath(), $"da-speaker-{Guid.NewGuid():N}.json");
+        var path = Path.Combine(Path.GetTempPath(), $"daspeaker-{Guid.NewGuid():N}.json");
         try
         {
             File.WriteAllText(path, "{\"Script\":\"Keep me\",\"LineDelayMs\":-99,\"KeyGapMs\":99999,\"Width\":2}");
