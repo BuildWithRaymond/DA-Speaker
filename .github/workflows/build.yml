@@ -28,11 +28,11 @@ jobs:
         with:
           dotnet-version: 10.0.x
       - name: Restore
-        run: dotnet restore DA-Speaker.slnx
+        run: dotnet restore DASpeaker.slnx
       - name: Build and test
-        run: dotnet test DA-Speaker.slnx -c Release --no-restore -p:UseSharedCompilation=false -m:1 -nodeReuse:false --logger "trx;LogFileName=tests.trx" --results-directory artifacts/test-results
+        run: dotnet test DASpeaker.slnx -c Release --no-restore -p:UseSharedCompilation=false -m:1 -nodeReuse:false --logger "trx;LogFileName=tests.trx" --results-directory artifacts/test-results
       - name: Publish Windows app
-        run: dotnet publish src/DA-Speaker/DA-Speaker.csproj -c Release -r win-x64 -p:SelfContained=false -p:PublishSelfContained=false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:UseSharedCompilation=false -o artifacts/release
+        run: dotnet publish src/DASpeaker/DASpeaker.csproj -c Release -r win-x64 -p:SelfContained=false -p:PublishSelfContained=false -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:UseSharedCompilation=false -o artifacts/release
       - name: Include license and user guide
         shell: pwsh
         run: |
@@ -41,7 +41,7 @@ jobs:
       - name: Upload Windows build
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: DA-Speaker-win-x64
+          name: DASpeaker-win-x64
           path: artifacts/release/
           if-no-files-found: error
       - name: Upload test results and UI captures
